@@ -11,9 +11,6 @@
 			"version": "3.12"
 		}
 	},
-	"updateContentCommand": [
-		"/bin/bash -c 'cd scraper/src && pipenv install'"
-	],
 	"customizations": {
         "vscode": {
             "settings": {
