@@ -5,8 +5,10 @@ name = "pypi"
 
 [packages]
 selenium = "*"
+pandas = "*"
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.12"

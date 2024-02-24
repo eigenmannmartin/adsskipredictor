@@ -15,12 +15,13 @@ RUN /venv/bin/pip install -r requirements.txt
 #FROM gcr.io/distroless/python3-debian12
 FROM debian:12-slim
 
-# Install manually all the missing libraries
-RUN apt-get update 
-RUN apt-get install -y gconf-service libasound2 libatk1.0-0 libcairo2 libcups2 libfontconfig1 libgdk-pixbuf2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libxss1 fonts-liberation libnss3 lsb-release xdg-utils wget
-# Install Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-RUN dpkg -i google-chrome-stable_current_amd64.deb; apt-get -fy install
+RUN apt-get update \
+    && apt-get install -y firefox-esr locales python3 \
+    && cp /usr/share/i18n/SUPPORTED /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
+    && locale-gen \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes
 
 WORKDIR /app
 COPY ./src /app
