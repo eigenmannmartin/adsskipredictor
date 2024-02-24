@@ -17,7 +17,7 @@ FROM debian:12-slim
 
 RUN apt-get update \
     && apt-get install -y firefox-esr locales python3 \
-    && cp /usr/share/i18n/SUPPORTED /etc/locale.gen \
+    && cat /usr/share/i18n/SUPPORTED | grep 'de_' >> /etc/locale.gen \
     && dpkg-reconfigure --frontend=noninteractive locales \
     && locale-gen \
     && apt-get clean autoclean \
