@@ -3,6 +3,19 @@ steps:
   args: [ 'build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/scraper:$COMMIT_SHA', './scraper' ]
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/scraper:$COMMIT_SHA' ]
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'jobs'
+  - 'update'
+  - 'adsskipredictor-scraper'
+  - '--image'
+  - ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/scraper:$COMMIT_SHA
+  - '--project'
+  - '$PROJECT_ID'
+  - '--region'
+  - '${_LOCATION}'
 images:
 - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/scraper:$COMMIT_SHA'
 options:
