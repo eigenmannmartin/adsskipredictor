@@ -1,0 +1,36 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: adsskipredictor-scraper
+  labels:
+    cloud.googleapis.com/location: europe-west6
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      taskCount: 1
+      template:
+        spec:
+          timeoutSeconds: 600
+          maxRetries: 3
+          containers:
+          - image: [REPLACE_WITH_YOUR_IMAGE]
+            env:
+            - name: OUT_PATH
+              value: /mnt/data
+            volumeMounts:
+            - mountPath: /mnt/data
+              name: data
+            resources:
+              limits:
+                cpu: 4000m
+                memory: 2Gi
+          volumes:
+          - name: data
+            csi:
+              driver: gcsfuse.run.googleapis.com
+              readOnly: false
+              volumeAttributes:
+                bucketName: adsskipredictor
