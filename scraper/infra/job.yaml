@@ -20,6 +20,12 @@ spec:
             env:
             - name: OUT_PATH
               value: /mnt/data
+            - name: SENTRY_DSN
+              value: [REPLACE_WITH_YOUR_SENTRY_DSN]
+            - name: SENTRY_PROFILE_RATE
+              value: "0.1"
+            - name: SENTRY_TRACES_RATE
+              value: "0.1"
             volumeMounts:
             - mountPath: /mnt/data
               name: data

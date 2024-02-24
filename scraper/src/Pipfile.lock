@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "84c0305b6b4cbb0252c08132d1d88b317e99035f9a7f8e8df759cc8c17ca49dd"
+            "sha256": "9c3dcbe3e1e40882fb93dc043335cf071ddcee9b0b7cd0514d73f9af412beda3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -166,6 +166,14 @@
             "markers": "python_version >= '3.8'",
             "version": "==4.18.1"
         },
+        "sentry-sdk": {
+            "hashes": [
+                "sha256:d188b407c9bacbe2a50a824e1f8fb99ee1aeb309133310488c570cb6d7056643",
+                "sha256:d2dca2392cc5c9a2cc9bb874dd7978ebb759682fe4fe889ee7e970ee8dd1c61e"
+            ],
+            "index": "pypi",
+            "version": "==1.40.5"
+        },
         "six": {
             "hashes": [
                 "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
@@ -229,7 +237,7 @@
                 "sha256:450b20ec296a467077128bff42b73080516e71b56ff59a60a02bef2232c4fa9d",
                 "sha256:d0570876c61ab9e520d776c38acbbb5b05a776d3f9ff98a5c8fd5162a444cf19"
             ],
-            "markers": "python_version >= '3.8'",
+            "markers": "python_version >= '3.6'",
             "version": "==2.2.1"
         },
         "wsproto": {
