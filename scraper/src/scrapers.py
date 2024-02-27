@@ -4,6 +4,37 @@ from selenium.webdriver.common.by import By
 from time import sleep
 
 
+def pizol_ticket_scraper(driver, wait, out_path):
+    spinner_xpath = "//div[contains(@class, 'd-none') and @id='js-ticket-list-loading']"
+    card_xpath = "//div[contains(@class, 'swiper-wrapper')]//div[contains(@class, 'swiper-slide') and @aria-label]"
+    price_xpath = "*[@data-price]"
+    url = "https://ski.ticketcorner.ch/en/pizol/ski-resort-55/ski-ticket"
+
+    driver.get(url)
+    wait.until(lambda driver: driver.find_element(By.XPATH, spinner_xpath))
+    elements = driver.find_elements(By.XPATH, card_xpath)
+    df = pd.DataFrame(
+        [
+            [
+                datetime.strptime(
+                    e.get_attribute("data-date"),
+                    "%Y-%m-%d",
+                ),
+                float(
+                    e.find_element(By.XPATH, price_xpath).get_attribute("data-price"),
+                ),
+            ]
+            for e in elements
+        ],
+        columns=["date", "price"],
+    )
+    timestamp = datetime.now().isoformat()
+    df["fetch_timestamp"] = timestamp
+    df.to_csv(f"{out_path}/pizol_{timestamp}.csv", index=False)
+    print(df)
+    return df
+
+
 def gstaad_ticket_scraper(driver, wait, out_path):
     spinner_xpath = "//div[contains(@class, 'd-none') and @id='js-ticket-list-loading']"
     card_xpath = "//div[contains(@class, 'tickets-graph-swiper')]//div[@class='swiper-wrapper']//div[contains(@class, 'swiper-slide')]"
