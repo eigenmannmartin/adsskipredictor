@@ -27,6 +27,14 @@ spec:
               value: "0.1"
             - name: SENTRY_TRACES_RATE
               value: "0.1"
+            - name: DB_USER
+              value: [REPLACE_WITH_YOUR_USER]
+            - name: DB_PASS
+              value: [REPLACE_WITH_YOUR_PASS]
+            - name: DB_NAME
+              value: [REPLACE_WITH_YOUR_DB]
+            - name: INSTANCE_UNIX_SOCKET
+              value: [REPLACE_WITH_UNIX_SOCKET]
             volumeMounts:
             - mountPath: /mnt/data
               name: data
@@ -38,6 +46,6 @@ spec:
           - name: data
             csi:
               driver: gcsfuse.run.googleapis.com
-              readOnly: false
+              readOnly: true
               volumeAttributes:
                 bucketName: adsskipredictor
