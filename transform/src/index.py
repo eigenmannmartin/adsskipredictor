@@ -5,14 +5,14 @@ import pandas as pd
 import glob
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
-  
+
 
 url = URL.create(
     drivername="postgresql",
     username=os.environ["DB_USER"],
     password=os.environ["DB_PASS"],
-    host=os.environ["INSTANCE_UNIX_SOCKET"],
-    database=os.environ["DB_NAME"]
+    query={"unix_socket": os.environ["INSTANCE_UNIX_SOCKET"]},
+    database=os.environ["DB_NAME"],
 )
 db = create_engine(url)
 conn = db.connect()
@@ -25,17 +25,18 @@ sentry_sdk.init(
 
 
 def main():
-    data_files = glob.glob(os.path.join(os.environ.get("OUT_PATH", "./") , "*.csv"))
-    df = pd.DataFrame([], columns=["date", "price", "fetch_timestamp", "scrape_file"]).dropna(axis=1, how="all")
+    data_files = glob.glob(os.path.join(os.environ.get("OUT_PATH", "./"), "*.csv"))
+    df = pd.DataFrame(
+        [], columns=["date", "price", "fetch_timestamp", "scrape_file"]
+    ).dropna(axis=1, how="all")
     for file in data_files:
         df_file = pd.read_csv(file)
-        df_file['scrape_file'] = os.path.basename(file)
-        df_file['resort'] = os.path.basename(file).split("_")[0]
+        df_file["scrape_file"] = os.path.basename(file)
+        df_file["resort"] = os.path.basename(file).split("_")[0]
         df = pd.concat([df, df_file])
-    
-    df.to_sql('data', con=conn, if_exists='replace', index=False)
+
+    df.to_sql("data", con=conn, if_exists="replace", index=False)
     print(df.describe())
-    
 
 
 if __name__ == "__main__":
