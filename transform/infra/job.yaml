@@ -33,8 +33,8 @@ spec:
               value: [REPLACE_WITH_YOUR_PASS]
             - name: DB_NAME
               value: [REPLACE_WITH_YOUR_DB]
-            - name: INSTANCE_UNIX_SOCKET
-              value: [REPLACE_WITH_UNIX_SOCKET]
+            - name: DB_HOST
+              value: [REPLACE_WITH_YOUR_DB_HOST]
             volumeMounts:
             - mountPath: /mnt/data
               name: data

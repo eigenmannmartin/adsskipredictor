@@ -11,7 +11,7 @@ url = URL.create(
     drivername="postgresql",
     username=os.environ["DB_USER"],
     password=os.environ["DB_PASS"],
-    query={"unix_socket": os.environ["INSTANCE_UNIX_SOCKET"]},
+    host=os.environ["DB_HOST"],
     database=os.environ["DB_NAME"],
 )
 db = create_engine(url)
