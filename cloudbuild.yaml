@@ -4,6 +4,11 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/scraper:$COMMIT_SHA' ]
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/transform:$COMMIT_SHA', './transform' ]
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/transform:$COMMIT_SHA' ]
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
   args:
   - 'run'
@@ -16,7 +21,21 @@ steps:
   - '$PROJECT_ID'
   - '--region'
   - '${_LOCATION}'
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+  - 'run'
+  - 'jobs'
+  - 'update'
+  - 'adsskipredictor-transform'
+  - '--image'
+  - ${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/transform:$COMMIT_SHA
+  - '--project'
+  - '$PROJECT_ID'
+  - '--region'
+  - '${_LOCATION}'
 images:
 - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/scraper:$COMMIT_SHA'
+- '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/transform:$COMMIT_SHA'
 options:
   logging: CLOUD_LOGGING_ONLY

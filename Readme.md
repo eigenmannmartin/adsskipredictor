@@ -11,4 +11,5 @@ sudo xhost +
 Initial cloud run setup setup.
 ```
 gcloud beta run jobs replace scraper/infra/job.yaml
+gcloud beta run jobs replace transform/infra/job.yaml
 ```
