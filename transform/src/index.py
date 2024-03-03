@@ -1,9 +1,8 @@
-import locale
 import os
 import sentry_sdk
 import pandas as pd
 import glob
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.engine import URL
 
 
@@ -25,14 +24,24 @@ sentry_sdk.init(
 )
 
 def main():
-    data_files = glob.glob(os.path.join(os.environ.get("OUT_PATH", "./"), "*.csv"))
-    conn.execute("TRUNCATE data;")
-    for file in data_files:
+    price_files = glob.glob(os.path.join(os.environ.get("PRICES_PATH", "./"), "*.csv"))
+    for ind, file in enumerate(price_files):
         print(f"reading: {file}")
         df = pd.read_csv(file)
         df["scrape_file"] = os.path.basename(file)
         df["resort"] = os.path.basename(file).split("_")[0]
-        df.to_sql("data", con=conn, if_exists="append", index=False)
+        df.to_sql("prices", con=conn, if_exists="replace" if ind == 0 else "append", index=False)
+    print(df.describe())
+
+
+    weather_files = glob.glob(os.path.join(os.environ.get("WEATHER_PATH", "./"), "*.csv"))
+    latest_weather_files = sorted(weather_files, key=os.path.getctime, reverse=True)[:4] # get the 4 latest files
+    for ind, file in enumerate(latest_weather_files):
+        print(f"reading: {file}")
+        df = pd.read_csv(file)
+        df["request_file"] = os.path.basename(file)
+        df["resort"] = os.path.basename(file).split("_")[0]
+        df.to_sql("weather", con=conn, if_exists="replace" if ind == 0 else "append", index=False)
     print(df.describe())
 
 

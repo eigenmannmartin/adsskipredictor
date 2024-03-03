@@ -19,8 +19,10 @@ spec:
           containers:
           - image: [REPLACE_WITH_YOUR_IMAGE]
             env:
-            - name: OUT_PATH
-              value: /mnt/data
+            - name: WEATHER_PATH
+              value: /mnt/weather
+            - name: PRICES_PATH
+              value: /mnt/prices
             - name: SENTRY_DSN
               value: [REPLACE_WITH_YOUR_SENTRY_DSN]
             - name: SENTRY_PROFILE_RATE
@@ -36,14 +38,22 @@ spec:
             - name: DB_HOST
               value: [REPLACE_WITH_YOUR_DB_HOST]
             volumeMounts:
-            - mountPath: /mnt/data
-              name: data
+            - mountPath: /mnt/prices
+              name: prices
+            - mountPath: /mnt/weather
+              name: weather
             resources:
               limits:
                 cpu: 2000m
                 memory: 1Gi
           volumes:
-          - name: data
+          - name: weather
+            csi:
+              driver: gcsfuse.run.googleapis.com
+              readOnly: true
+              volumeAttributes:
+                bucketName: adsskipredictor_weather
+          - name: prices
             csi:
               driver: gcsfuse.run.googleapis.com
               readOnly: true
