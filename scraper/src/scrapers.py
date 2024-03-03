@@ -4,6 +4,72 @@ from selenium.webdriver.common.by import By
 from time import sleep
 
 
+def adelboden_ticket_scraper(driver, wait, out_path):
+    book_now_xpath = "//button[contains(@aria-label, 'Jetzt Buchen')]"
+    spinner_xpath = "//div[contains(@class, 'loading-spinner loading-spinner--shop')]"
+    card_xpath = "//div[contains(@class, 'calendar-body')]//div[contains(@class, 'calendar-dates')]//div[@class='calendar-day']"
+    date_xpath = "span[@class='calendar-day__inner']//span[@class='calendar-day__day']"
+    price_xpath = (
+        "span[@class='calendar-day__inner']//span[@class='calendar-day__price']"
+    )
+    month_xpath = "//div[@class='calendar-nav__month']"
+    next_month_xpath = (
+        "//button[contains(@class, 'calendar-nav__button calendar-nav__button--next')]"
+    )
+    url = "https://www.adelboden-lenk.ch/de/Shop/Ticketuebersicht/1-tag-adelboden-lenk_ticket_51393"
+
+    driver.get(url)
+    driver.find_element(By.XPATH, book_now_xpath).click()
+
+    month_count = 4 - datetime.now().month
+    df = pd.DataFrame([], columns=["date", "price"]).dropna(axis=1, how="all")
+    if month_count > 0:
+        for _ in range(month_count + 1):
+            wait.until_not(lambda driver: driver.find_element(By.XPATH, spinner_xpath))
+            month = driver.find_element(By.XPATH, month_xpath).get_attribute(
+                "innerText"
+            )
+            elements = driver.find_elements(By.XPATH, card_xpath)
+            df = pd.concat(
+                [
+                    df,
+                    pd.DataFrame(
+                        [
+                            [
+                                datetime.strptime(
+                                    " ".join(
+                                        [
+                                            e.find_element(
+                                                By.XPATH, date_xpath
+                                            ).get_attribute("innerHTML"),
+                                            str(month),
+                                        ]
+                                    ),
+                                    "%d %B %Y",
+                                ),
+                                float(
+                                    e.find_element(By.XPATH, price_xpath)
+                                    .get_attribute("innerHTML")
+                                    .replace("CHF", "")
+                                    .strip()
+                                ),
+                            ]
+                            for e in elements
+                        ],
+                        columns=["date", "price"],
+                    ),
+                ],
+                ignore_index=True,
+            )
+            driver.find_element(By.XPATH, next_month_xpath).click()
+            sleep(2)
+    timestamp = datetime.now().isoformat()
+    df["fetch_timestamp"] = timestamp
+    df.to_csv(f"{out_path}/adelboden_{timestamp}.csv", index=False)
+    print(df)
+    return df
+
+
 def pizol_ticket_scraper(driver, wait, out_path):
     spinner_xpath = "//div[contains(@class, 'd-none') and @id='js-ticket-list-loading']"
     card_xpath = "//div[contains(@class, 'swiper-wrapper')]//div[contains(@class, 'swiper-slide') and @aria-label]"
