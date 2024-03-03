@@ -1,0 +1,43 @@
+apiVersion: run.googleapis.com/v1
+kind: Job
+metadata:
+  name: adsskipredictor-weather
+  labels:
+    cloud.googleapis.com/location: europe-west6
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/cloudsql-instances: [REPLACE_WITH_YOUR_DB]
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      taskCount: 1
+      template:
+        spec:
+          timeoutSeconds: 600
+          maxRetries: 3
+          containers:
+          - image: [REPLACE_WITH_YOUR_IMAGE]
+            env:
+            - name: OUT_PATH
+              value: /mnt/data
+            - name: SENTRY_DSN
+              value: [REPLACE_WITH_YOUR_SENTRY_DSN]
+            - name: SENTRY_PROFILE_RATE
+              value: "0.1"
+            - name: SENTRY_TRACES_RATE
+              value: "0.1"
+            volumeMounts:
+            - mountPath: /mnt/data
+              name: data
+            resources:
+              limits:
+                cpu: 2000m
+                memory: 1Gi
+          volumes:
+          - name: data
+            csi:
+              driver: gcsfuse.run.googleapis.com
+              readOnly: false
+              volumeAttributes:
+                bucketName: adsskipredictor_weather
