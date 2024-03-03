@@ -4,6 +4,7 @@ from scrapers import gstaad_ticket_scraper, scuol_ticket_scraper, pizol_ticket_s
 import locale
 import os
 import sentry_sdk
+from sentry_sdk.crons import monitor
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN", ""),
@@ -12,6 +13,7 @@ sentry_sdk.init(
 )
 
 
+@monitor(monitor_slug="scrape")
 def main():
     locale.setlocale(locale.LC_TIME, "de_DE.UTF-8")
     driver_options = webdriver.FirefoxOptions()
@@ -26,7 +28,8 @@ def main():
 
     for scraper in [pizol_ticket_scraper, gstaad_ticket_scraper, scuol_ticket_scraper]:
         try:
-            scraper(driver, wait, out_path=os.environ.get("OUT_PATH", "."))
+            with sentry_sdk.start_transaction(op="scrape", name=scraper.__name__):
+                scraper(driver, wait, out_path=os.environ.get("OUT_PATH", "."))
         except Exception as e:
             raise e
             sentry_sdk.capture_exception(e)
