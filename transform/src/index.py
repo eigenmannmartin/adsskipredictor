@@ -19,23 +19,20 @@ conn = db.connect()
 
 sentry_sdk.init(
     dsn=os.environ.get("SENTRY_DSN", ""),
+    enable_tracing=True,
     traces_sample_rate=float(os.environ.get("SENTRY_TRACES_RATE", "0.0")),
     profiles_sample_rate=float(os.environ.get("SENTRY_PROFILE_RATE", "0.0")),
 )
 
-
 def main():
     data_files = glob.glob(os.path.join(os.environ.get("OUT_PATH", "./"), "*.csv"))
-    df = pd.DataFrame(
-        [], columns=["date", "price", "fetch_timestamp", "scrape_file"]
-    ).dropna(axis=1, how="all")
+    conn.execute("TRUNCATE data;")
     for file in data_files:
-        df_file = pd.read_csv(file)
-        df_file["scrape_file"] = os.path.basename(file)
-        df_file["resort"] = os.path.basename(file).split("_")[0]
-        df = pd.concat([df, df_file])
-
-    df.to_sql("data", con=conn, if_exists="replace", index=False)
+        print(f"reading: {file}")
+        df = pd.read_csv(file)
+        df["scrape_file"] = os.path.basename(file)
+        df["resort"] = os.path.basename(file).split("_")[0]
+        df.to_sql("data", con=conn, if_exists="append", index=False)
     print(df.describe())
 
 

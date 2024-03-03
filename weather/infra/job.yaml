@@ -8,7 +8,6 @@ spec:
   template:
     metadata:
       annotations:
-        run.googleapis.com/cloudsql-instances: [REPLACE_WITH_YOUR_DB]
         run.googleapis.com/execution-environment: gen2
     spec:
       taskCount: 1
