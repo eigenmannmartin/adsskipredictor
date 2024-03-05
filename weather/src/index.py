@@ -123,7 +123,13 @@ def main():
             "name": "La Videmanette (Gstaad)",
             "short_name": "gstaad",
         },  # https://www.google.com/maps/place/La+Videmanette/@46.4549067,7.1980502,2066m/data=!3m2!1e3!4b1!4m6!3m5!1s0x478ef2636b28158d:0xad728f797d15fcb6!8m2!3d46.4549!4d7.2032!16s%2Fg%2F119pgctxg?entry=ttu
-    ]
+        {
+            "latitude": 46.82018542077283,
+            "longitude": 9.263323555695727,
+            "name": "LAAX",
+            "short_name": "laax",
+        },  # https://www.google.com/maps/place/LAAX/@46.8200569,9.2607272,17z/data=!4m14!1m7!3m6!1s0x4784dc3e2420c05b:0xe0a43d9c17857508!2sLAAX!8m2!3d46.8200533!4d9.2633021!16s%2Fg%2F1trqg21b!3m5!1s0x4784dc3e2420c05b:0xe0a43d9c17857508!8m2!3d46.8200533!4d9.2633021!16s%2Fg%2F1trqg21b?entry=ttu
+  ]
     for location in locations:
         with sentry_sdk.start_transaction(op="request", name=location["name"]):
             request_openmeteo(
