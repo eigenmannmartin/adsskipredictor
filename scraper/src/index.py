@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from scrapers import (
+    laax_ticket_scraper,
     adelboden_ticket_scraper,
     gstaad_ticket_scraper,
     scuol_ticket_scraper,
@@ -32,6 +33,7 @@ def main():
     wait = WebDriverWait(driver, 10)
 
     for scraper in [
+        laax_ticket_scraper,
         adelboden_ticket_scraper,
         pizol_ticket_scraper,
         gstaad_ticket_scraper,
@@ -41,6 +43,7 @@ def main():
             with sentry_sdk.start_transaction(op="scrape", name=scraper.__name__):
                 scraper(driver, wait, out_path=os.environ.get("OUT_PATH", "."))
         except Exception as e:
+            print(e)
             sentry_sdk.capture_exception(e)
 
     driver.quit()
