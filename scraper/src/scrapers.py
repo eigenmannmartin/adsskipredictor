@@ -132,12 +132,13 @@ def adelboden_ticket_scraper(driver, wait, out_path):
 
 def pizol_ticket_scraper(driver, wait, out_path):
     spinner_xpath = "//div[contains(@class, 'd-none') and @id='js-ticket-list-loading']"
-    card_xpath = "//div[contains(@class, 'swiper-wrapper')]//div[contains(@class, 'swiper-slide') and @aria-label]"
+    card_xpath = "//div[contains(@class, 'swiper-wrapper')]//div[@class='swiper-slide' and @aria-label]"
     price_xpath = "*[@data-price]"
     url = "https://ski.ticketcorner.ch/en/pizol/ski-resort-55/ski-ticket"
 
     driver.get(url)
     wait.until(lambda driver: driver.find_element(By.XPATH, spinner_xpath))
+    driver.find_element(By.XPATH, "//a[contains(@class,'cmptxt_btn_yes')]").click()
     elements = driver.find_elements(By.XPATH, card_xpath)
     df = pd.DataFrame(
         [
