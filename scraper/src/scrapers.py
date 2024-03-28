@@ -79,6 +79,7 @@ def adelboden_ticket_scraper(driver, wait, out_path):
     url = "https://www.adelboden-lenk.ch/de/Shop/Ticketuebersicht/1-tag-adelboden-lenk_ticket_51393"
 
     driver.get(url)
+    driver.find_element(By.XPATH, "//button[@id='CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll']").click()
     driver.find_element(By.XPATH, book_now_xpath).click()
 
     month_count = 5 - datetime.now().month
