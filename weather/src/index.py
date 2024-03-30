@@ -129,7 +129,7 @@ def main():
             "name": "LAAX",
             "short_name": "laax",
         },  # https://www.google.com/maps/place/LAAX/@46.8200569,9.2607272,17z/data=!4m14!1m7!3m6!1s0x4784dc3e2420c05b:0xe0a43d9c17857508!2sLAAX!8m2!3d46.8200533!4d9.2633021!16s%2Fg%2F1trqg21b!3m5!1s0x4784dc3e2420c05b:0xe0a43d9c17857508!8m2!3d46.8200533!4d9.2633021!16s%2Fg%2F1trqg21b?entry=ttu
-  ]
+    ]
     for location in locations:
         with sentry_sdk.start_transaction(op="request", name=location["name"]):
             request_openmeteo(
