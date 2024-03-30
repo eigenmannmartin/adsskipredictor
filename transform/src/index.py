@@ -43,7 +43,7 @@ def main():
         os.path.join(os.environ.get("WEATHER_PATH", "./"), "*.csv")
     )
     latest_weather_files = sorted(weather_files, key=os.path.getctime, reverse=True)[
-        :4
+        :5
     ]  # get the 4 latest files
     for ind, file in enumerate(latest_weather_files):
         print(f"reading: {file}")
