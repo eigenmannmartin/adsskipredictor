@@ -2,7 +2,7 @@ import os
 import sentry_sdk
 import pandas as pd
 import glob
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 
 
