@@ -12,13 +12,5 @@
 		},
 		"ghcr.io/dhoeric/features/google-cloud-cli:1": {},
 		"ghcr.io/joshuanianji/devcontainer-features/gcloud-cli-persistence:1": {}
-	},
-	"customizations": {
-        "vscode": {
-            "settings": {
-                "terminal.integrated.defaultProfile.linux": "zsh",
-                "terminal.integrated.profiles.linux": { "zsh": { "path": "/bin/zsh" } }
-            }
-        }
-    }
+	}
 }
