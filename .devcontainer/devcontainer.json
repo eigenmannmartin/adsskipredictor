@@ -13,7 +13,7 @@
 		"ghcr.io/dhoeric/features/google-cloud-cli:1": {},
 		"ghcr.io/joshuanianji/devcontainer-features/gcloud-cli-persistence:1": {},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-			"packages": "postgresql-client"
+			"packages": "postgresql-client graphviz"
 		}
 	}
 }
